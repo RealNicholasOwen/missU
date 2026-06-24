@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>When are you free? 📅</title>
+    <meta name="description" content="Let me know when you are free to meet up.">
+    <meta name="author" content="Antigravity Web Builder">
+
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Floating background decorative shapes -->
+    <div class="background-decor">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="app-container" id="app-container">
+        <!-- Date Selection Screen -->
+        <section class="card active" id="picker-card">
+            <div class="card-header">
+                <div class="envelope-icon">
+                    <i class="fa-regular fa-calendar-days animated-envelope"></i>
+                </div>
+            </div>
+            <div class="card-body">
+                <img src="pic2.jpg" alt="" width="120px" style="border-radius: 50%;">
+                <h1 class="title">这个笨蛋想他的妹妹</h1>
+                <p class="subtitle">选个打VC的时间</p>
+
+                <!-- Datetime Picker Input -->
+                <input type="datetime-local" id="datetime-picker" class="datetime-input" required>
+                <div id="error-message"
+                    style="color: #ff6b8b; font-size: 13px; margin-top: 10px; font-weight: 600; visibility: hidden;">
+                    Please select a valid date and time! 🥺
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary btn-block" id="submit-btn">
+                    <span>Send Date & Time</span>
+                    <i class="fa-solid fa-paper-plane btn-icon"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Submission Loading Overlay -->
+        <section class="card hidden" id="loading-card">
+            <div class="card-body loading-body">
+                <div class="spinner">
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+                <h2 class="loading-title">Sending schedule...</h2>
+                <p class="subtitle">Reserving a spot in the calendar 📅</p>
+            </div>
+        </section>
+
+        <!-- Success screen -->
+        <section class="card hidden" id="success-card">
+            <div class="card-header">
+                <div class="success-icon">
+                    <i class="fa-solid fa-heart success-heart"></i>
+                </div>
+            </div>
+            <div class="card-body">
+                <h1 class="title">Date Confirmed!</h1>
+                <p class="subtitle" id="success-message">Your choice has been sent. I'll make sure to clear my schedule.
+                    Can't wait to see you! 💕</p>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-secondary btn-block" id="change-btn">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Change Date</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Inline Script for Page Logic -->
+    <script>
+        // --- CONFIGURATION ---
+        const CONFIG = {
+            // ⚠️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+            // If empty, it will automatically attempt to load the one saved in your browser's localStorage
+            webAppUrl: "https://script.google.com/macros/s/AKfycbxaYGc1Ws74cgobLs2mDbU7hYyYen8SPByRdAE6Q4Stq4PM_syGiLEtTOE6Yw1D6e2xNg/exec"
+        };
+
+        // --- DOM ELEMENTS ---
+        const pickerCard = document.getElementById("picker-card");
+        const loadingCard = document.getElementById("loading-card");
+        const successCard = document.getElementById("success-card");
+
+        const datetimePicker = document.getElementById("datetime-picker");
+        const submitBtn = document.getElementById("submit-btn");
+        const changeBtn = document.getElementById("change-btn");
+        const errorMessage = document.getElementById("error-message");
+        const successMessage = document.getElementById("success-message");
+
+        // Set default minimum date-time to "now"
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        datetimePicker.min = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+        // --- CORE LOGIC ---
+
+        function showCard(activeCard) {
+            [pickerCard, loadingCard, successCard].forEach(card => {
+                card.classList.add("hidden");
+                card.classList.remove("active");
+            });
+            activeCard.classList.remove("hidden");
+            activeCard.classList.add("active");
+        }
+
+        // Submit button handler
+        submitBtn.addEventListener("click", () => {
+            const selectedVal = datetimePicker.value;
+            if (!selectedVal) {
+                errorMessage.style.visibility = "visible";
+                // Animation shake effect
+                datetimePicker.style.animation = "shake 0.5s";
+                setTimeout(() => datetimePicker.style.animation = "", 500);
+                return;
+            }
+
+            errorMessage.style.visibility = "hidden";
+            submitDate(selectedVal);
+        });
+
+        // Change button handler
+        changeBtn.addEventListener("click", () => {
+            showCard(pickerCard);
+        });
+
+        function submitDate(rawDateTimeString) {
+            showCard(loadingCard);
+
+            // Format date string for readability
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            const formattedDate = new Date(rawDateTimeString).toLocaleDateString('en-US', options);
+
+            // Resolve WebApp URL (page config vs localStorage)
+            let webAppUrl = CONFIG.webAppUrl;
+            if (!webAppUrl) {
+                webAppUrl = localStorage.getItem("webAppUrl");
+            }
+
+            const payload = {
+                timestamp: new Date().toISOString(),
+                totalQuestions: 1,
+                answeredQuestions: 1,
+                totalClicks: 1,
+                timeSpentSeconds: 0,
+                answers: [
+                    {
+                        questionId: 99, // Separate ID to avoid colliding
+                        questionText: "When are you free?",
+                        answer: formattedDate
+                    }
+                ]
+            };
+
+            console.log("📅 Date Submission Payload:", payload);
+
+            // Mock Mode if URL is missing
+            if (!webAppUrl || webAppUrl === "PASTE_YOUR_COPIED_URL_HERE") {
+                console.warn("⚠️ Google Apps Script Web App URL is not set. Running in MOCK MODE.");
+
+                setTimeout(() => {
+                    showCard(successCard);
+                    successMessage.innerHTML = `
+                        Your selected date (<strong>${formattedDate}</strong>) has been simulated! 💌<br><br>
+                        <div style="font-size: 13px; text-align: left; background: #fff0f2; border: 1px dashed #ffb6c1; border-radius: 8px; padding: 12px; margin-top: 15px; color: #b03060;">
+                            <strong>🔍 Developer Information:</strong><br>
+                            To send this date to your Google Sheet and email, make sure your Apps Script URL is set in <code>CONFIG.webAppUrl</code> inside <code>missU.html</code>, or complete the main questionnaire page once first to register the URL automatically.
+                        </div>
+                    `;
+                }, 2000);
+                return;
+            }
+
+            // Real submission
+            fetch(webAppUrl, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(() => {
+                    showCard(successCard);
+                    successMessage.innerHTML = `Your date (<strong>${formattedDate}</strong>) has been sent. I'll make sure to clear my schedule. Can't wait to see you! 💕`;
+                })
+                .catch(error => {
+                    console.error("❌ Submission Error:", error);
+                    showCard(successCard);
+                    successMessage.innerHTML = `
+                    Your schedule selection was recorded locally, but we had trouble reaching the spreadsheet.<br><br>
+                    Error details: <code style="font-size: 12px; color: red;">${error.message}</code>
+                `;
+                });
+        }
+    </script>
+</body>
+
+</html>

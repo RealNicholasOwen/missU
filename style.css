@@ -1,0 +1,579 @@
+/* ==========================================================================
+   Design System & Variables
+   ========================================================================== */
+:root {
+    /* Color Palette - Soft Romantic Pastels */
+    --primary-gradient: linear-gradient(135deg, #9ae1ff 0%, #d7f2ff 99%, #d7f2ff 100%);
+    --bg-gradient: linear-gradient(180deg, #e6f5ff 0%, #cfe9ff 100%);
+    --accent-color: #6b8bff;
+    --accent-hover: #476cff;
+    --accent-light: #e5f5ff;
+    --text-primary: #4a3e41;
+    --text-secondary: #8c7e81;
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --card-border: rgba(255, 255, 255, 0.6);
+    --card-shadow: rgba(107, 139, 255, 0.2);
+    
+    /* Layout Variables */
+    --border-radius-lg: 24px;
+    --border-radius-md: 16px;
+    --border-radius-sm: 12px;
+    --transition-fast: 0.2s ease;
+    --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   Base Styles & Reset
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-primary);
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+    padding: 20px;
+}
+
+/* ==========================================================================
+   Animated Background Elements
+   ========================================================================== */
+.background-decor {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.5;
+    animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    background: #ffb6c1;
+    top: -50px;
+    right: -50px;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 250px;
+    height: 250px;
+    background: #ffd1dc;
+    bottom: -50px;
+    left: -50px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    width: 200px;
+    height: 200px;
+    background: #ffc0cb;
+    top: 50%;
+    left: 70%;
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(-30px, 30px) scale(1.1);
+    }
+}
+
+/* ==========================================================================
+   App Container (Mobile Viewport Constrained)
+   ========================================================================== */
+.app-container {
+    width: 100%;
+    max-width: 420px;
+    min-height: 580px;
+    display: flex;
+    position: relative;
+    z-index: 2;
+}
+
+/* ==========================================================================
+   Card Structure (Glassmorphism)
+   ========================================================================== */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 15px 35px var(--card-shadow), 0 5px 15px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    padding: 35px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: opacity var(--transition-smooth), transform var(--transition-smooth);
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.card.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.92) translateY(15px);
+    z-index: 1;
+}
+
+.card.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: scale(1) translateY(0);
+    z-index: 5;
+}
+
+/* Card Elements */
+.card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 25px 0;
+}
+
+.card-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+.title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+/* ==========================================================================
+   Start Screen Graphics & Icons
+   ========================================================================== */
+.envelope-icon {
+    width: 90px;
+    height: 90px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(255, 107, 139, 0.15);
+    margin-top: 15px;
+}
+
+.animated-envelope {
+    font-size: 40px;
+    color: var(--accent-color);
+    animation: heartbeat 2.5s infinite ease-in-out;
+}
+
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    15% {
+        transform: scale(1.12);
+    }
+    30% {
+        transform: scale(1);
+    }
+    45% {
+        transform: scale(1.15);
+    }
+    60% {
+        transform: scale(1);
+    }
+}
+
+/* ==========================================================================
+   Progress Bar
+   ========================================================================== */
+.progress-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.progress-bar-wrapper {
+    height: 6px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 20%;
+    background: var(--primary-gradient);
+    border-radius: 3px;
+    transition: width var(--transition-smooth);
+}
+
+.progress-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: right;
+}
+
+/* ==========================================================================
+   Question Area
+   ========================================================================== */
+.question-body {
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.question-emoji {
+    font-size: 48px;
+    margin-bottom: 12px;
+    animation: wiggle 3s infinite ease-in-out;
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-8deg) scale(1.05); }
+    75% { transform: rotate(8deg) scale(1.05); }
+}
+
+.question-text {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 25px;
+    color: var(--text-primary);
+}
+
+/* Options Container */
+.options-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+/* ==========================================================================
+   Interactive Buttons
+   ========================================================================== */
+.btn {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 24px;
+    border-radius: var(--border-radius-md);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Base button states */
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 8px 20px rgba(255, 107, 139, 0.25);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 107, 139, 0.35);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: white;
+    color: var(--text-primary);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.btn-secondary:hover {
+    background: var(--accent-light);
+    color: var(--accent-color);
+    border-color: transparent;
+}
+
+/* Option Specific Buttons */
+.btn-option {
+    background: white;
+    color: var(--text-primary);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    width: 100%;
+    text-align: left;
+    justify-content: flex-start;
+    padding: 16px 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.01);
+}
+
+.btn-option:hover {
+    background: white;
+    border-color: var(--accent-color);
+    box-shadow: 0 6px 15px rgba(255, 107, 139, 0.08);
+    transform: translateY(-1px);
+}
+
+.btn-option:active {
+    transform: scale(0.98);
+}
+
+.btn-option.selected {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 8px 20px rgba(255, 107, 139, 0.2);
+}
+
+/* Evasive Button Logic (No button that runs away) */
+.evasive-btn {
+    position: relative;
+    transition: left 0.15s cubic-bezier(0.18, 0.89, 0.32, 1.28), top 0.15s cubic-bezier(0.18, 0.89, 0.32, 1.28), transform 0.15s ease;
+}
+
+/* Utility buttons sizing */
+.btn-block {
+    width: 100%;
+}
+
+.btn-icon-only {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 50%;
+}
+
+.btn-icon {
+    font-size: 14px;
+    transition: transform var(--transition-fast);
+}
+
+.btn:hover .btn-icon {
+    transform: translateX(4px);
+}
+
+/* ==========================================================================
+   Input Controls
+   ========================================================================== */
+.text-area-input {
+    width: 100%;
+    min-height: 100px;
+    padding: 14px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    font-family: inherit;
+    font-size: 15px;
+    resize: none;
+    outline: none;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all var(--transition-fast);
+}
+
+.text-area-input:focus {
+    border-color: var(--accent-color);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 107, 139, 0.1);
+}
+
+.datetime-input {
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--border-radius-md);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    font-family: inherit;
+    font-size: 16px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--text-primary);
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.01);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.datetime-input:focus {
+    border-color: var(--accent-color);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 107, 139, 0.1);
+}
+
+/* ==========================================================================
+   Submit controls & click indicator
+   ========================================================================== */
+.card-controls {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding-top: 20px;
+}
+
+.clicks-counter {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.04);
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.clicks-counter span {
+    color: var(--accent-color);
+}
+
+/* ==========================================================================
+   Loading Overlay
+   ========================================================================== */
+.loading-body {
+    justify-content: center;
+    gap: 20px;
+}
+
+.loading-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* Spinner design */
+.spinner {
+    width: 50px;
+    height: 50px;
+    position: relative;
+}
+
+.double-bounce1, .double-bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+    animation-delay: -1.0s;
+}
+
+@keyframes sk-bounce {
+    0%, 100% { 
+        transform: scale(0.0);
+    } 50% { 
+        transform: scale(1.0);
+    }
+}
+
+/* ==========================================================================
+   Success State
+   ========================================================================== */
+.success-icon {
+    width: 90px;
+    height: 90px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(255, 107, 139, 0.15);
+    margin-top: 15px;
+}
+
+.success-heart {
+    font-size: 44px;
+    color: var(--accent-color);
+    animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.15); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+/* ==========================================================================
+   Mobile-Responsive Rules
+   ========================================================================== */
+@media (max-width: 480px) {
+    body {
+        padding: 0;
+    }
+    
+    .app-container {
+        height: 100vh;
+        max-width: 100%;
+        min-height: 100vh;
+    }
+    
+    .card {
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        padding: 35px 20px;
+    }
+}
